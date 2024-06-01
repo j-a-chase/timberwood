@@ -14,7 +14,7 @@ from asserts.asserts import assertType, assertExists, notMain
 from datetime import datetime
 
 class Logger:
-    def __init__(self, path: str, name: str, project_name: str) -> None:
+    def __init__(self, path: str = './', name: str = 'runtime.log', project_name: str = '') -> None:
         '''
         Constructor
 
