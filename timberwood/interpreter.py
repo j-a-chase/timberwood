@@ -11,6 +11,8 @@
 # imports
 from asserts.asserts import notMain, assertExists, assertType
 
+from os.path import exists
+
 class Interpreter:
     def __init__(self) -> None:
         '''
@@ -23,7 +25,7 @@ class Interpreter:
         self._log_data = None
         self._metrics = {
             'ACTION': 0,
-            'WARNING': 0,
+            'WARN': 0,
             'ERROR': 0,
             'CRITICAL': 0
         }
@@ -44,7 +46,7 @@ class Interpreter:
         assertType(str, type(name))
         assertExists(path)
 
-        with open(path+name) as log:
+        with open(f'{path}/{name}') as log:
             self._log_data = [line for line in log.readlines()]
 
     def calculate_metrics(self, actions: bool = False, warnings: bool = True,
@@ -69,6 +71,10 @@ class Interpreter:
         assertType(bool, type(criticals))
 
         for line in self._log_data:
+            # skip lines that don't contain metrics
+            if line[0] != '[': continue
+            
+            # summarize metrics
             colon = line.index(':')
             metric = line[1:colon]
             if actions and metric == 'ACTION':
@@ -79,38 +85,47 @@ class Interpreter:
                 self._metrics[metric] += 1
             elif criticals and metric == 'CRITICAL':
                 self._metrics[metric] += 1
-            else:
-                print(f'Error calculating metric {metric}...')
-                self.metrics = {}
-                return
     
-    def print_summary(self, writeout: bool = False) -> None:
+    def print_summary(self, writeout: str|None = None) -> None:
         '''
-        Prints log summary, with optional parameter to write it to a file
-        instead.
+        Prints log summary, with optional parameter to write it to output.txt
+        in a given directory instead.
 
         Parameters:
-            - writeout: a boolean indicating if output should be written to a \
-                        file or not
+            - writeout: a string containing a path to write the result to if \
+                        desired.
 
         Returns: None
         '''
         self._metrics = {k: v for k, v in self._metrics.items() if v > 0}
         summary = []
-        summary.append('Log Metrics Summary:')
+        summary.append('Log Metrics Summary:\n')
         summary.append('='*125)
+        summary.append('\n')
         for k, v in self._metrics.items():
             summary.append(f'{k} -> {v}')
+            summary.append('\n')
         summary.append('-'*125)
+        summary.append('\n')
         if 'WARN' in self._metrics:
-            summary.append(f'Software completed with {self._metrics['WARN']} warnings.')
+            summary.append(f'Software completed with {self._metrics['WARN']} warnings.\n')
             summary.append('-'*125)
+            summary.append('\n')
         if 'ERROR' in self._metrics:
-            summary.append(f'Software had {self._metrics['ERROR']} errors.')
+            summary.append(f'Software had {self._metrics['ERROR']} errors.\n')
             summary.append('-'*125)
+            summary.append('\n')
         if 'CRITICAL' in self._metrics:
-            summary.append(f'Software suffered from {self._metrics['CRITICAL']} critical failures')
-        summary.append('='*125)        
+            summary.append(f'Software suffered from {self._metrics['CRITICAL']} critical failures.\n')
+        summary.append('='*125)
+        summary.append('\n')
+
+        if writeout is not None and exists(writeout):
+            with open(f'{writeout}/outfile.txt', 'w') as out:
+                out.writelines(summary)
+        else:
+            for line in summary:
+                print(line, end='')
 
 if __name__ == '__main__':
     notMain('This is a class file. Import its contents into another file.')
