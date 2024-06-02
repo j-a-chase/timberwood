@@ -4,6 +4,12 @@
 
 from timberwood.logger import Logger
 
+from os import mkdir
+from os.path import exists
+
+if not exists('./logs'):
+    mkdir('./logs')
+
 LOG = Logger('./logs', 'runtime.log', 'Example Project 1')
 
 def function1() -> None:
