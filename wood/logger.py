@@ -10,7 +10,7 @@
 ################################################################################
 
 # imports
-from asserts.asserts import assertType, assertExists, notMain
+from .asserts.asserts import assertType, assertExists, notMain
 from datetime import datetime
 
 class Logger:
