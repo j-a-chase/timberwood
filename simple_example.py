@@ -1,8 +1,8 @@
 #
-# Example python program using Wood package
+# Example python program using timberwood package
 #
 
-from wood.logger import Logger
+from timberwood.logger import Logger
 
 LOG = Logger('./logs', 'runtime.log', 'Example Project 1')
 

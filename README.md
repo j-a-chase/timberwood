@@ -1,5 +1,5 @@
 # Overview
-Repository for my Python Logger class package, Wood.
+Repository for my Python Logger class package, TimberWood.
 
 Allows for easy and clean logging of program actions, warnings, errors, and even uncaught exceptions with the proper implementation. Also comes with simple assert package as well that allows for easy assert writing.
 
