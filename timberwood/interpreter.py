@@ -88,7 +88,7 @@ class Interpreter:
     
     def print_summary(self, writeout: str|None = None) -> None:
         '''
-        Prints log summary, with optional parameter to write it to output.txt
+        Prints log summary, with optional parameter to write it to output.log
         in a given directory instead.
 
         Parameters:
@@ -121,7 +121,7 @@ class Interpreter:
         summary.append('\n')
 
         if writeout is not None and exists(writeout):
-            with open(f'{writeout}/outfile.txt', 'w') as out:
+            with open(f'{writeout}/outfile.log', 'w') as out:
                 out.writelines(summary)
         else:
             for line in summary:
